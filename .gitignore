@@ -1,0 +1,8 @@
+# build & deps
+node_modules/
+.next/
+.vercel/
+# OS cruft
+.DS_Store
+# env
+.env.local

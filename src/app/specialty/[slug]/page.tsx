@@ -57,6 +57,17 @@ export default async function SpecialtyPage({ params }: SpecialtyPageProps) {
       <h1 className="text-2xl font-bold mb-4">
         {specialty.name} Projects
       </h1>
+      {/* Add Project button. In a future version you may want to restrict this to
+          owners or admins only. This link routes to a dynamic page for
+          creating a new project within this specialty. */}
+      <div className="mb-4">
+        <Link
+          href={`/specialty/${specialty.slug}/new`}
+          className="inline-block bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded"
+        >
+          Add Project
+        </Link>
+      </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {projectsWithStats && projectsWithStats.length > 0 ? (
           projectsWithStats.map((project) => (

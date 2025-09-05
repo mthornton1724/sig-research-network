@@ -359,6 +359,9 @@ def main(argv: Optional[List[str]] = None) -> int:
     parser.add_argument("--max-pages", type=int, default=50, help="Maximum number of pages to fetch")
     parser.add_argument("--upload-csv", action="store_true", help="Upload generated CSVs to Supabase storage")
     parser.add_argument("--supabase-bucket", default=None, help="Supabase storage bucket name")
+        parser.add_argument("--supabase-table-matches", default=None, help="(unused) Name of the matches table")
+    parser.add_argument("--supabase-table-ctgov", default=None, help="(unused) Name of the CT.gov table")
+    parser.add_argument("--supabase-table-uhealth", default=None, help="(unused) Name of the UHealth table")
     parser.add_argument("--ingest", action="store_true", help="Ingest (upsert) trial data into Supabase table")
     parser.add_argument("--supabase-table-trials", default="research_trials", help="Name of the trials table in Supabase")
     parser.add_argument("--out-dir", default="out", help="Directory to write output CSV files")
@@ -375,9 +378,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     # ``None`` and are intentionally ignored.  Accepting these flags
     # prevents ``argparse`` from raising ``unrecognized arguments``
     # errors when they are present in the workflow configuration.
-    parser.add_argument("--supabase-table-matches", default=None, help="(unused) Name of the matches table")
-    parser.add_argument("--supabase-table-ctgov", default=None, help="(unused) Name of the CT.gov table")
-    parser.add_argument("--supabase-table-uhealth", default=None, help="(unused) Name of the UHealth table")
+   
 
         # Additional table arguments for compatibility with existing workflows
     # The GitHub A

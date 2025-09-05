@@ -365,6 +365,23 @@ def main(argv: Optional[List[str]] = None) -> int:
 
     args = parser.parse_args(argv)
 
+        # Additional table arguments for compatibility with existing workflows
+    # The GitHub Actions workflow in this repository historically passed
+    # flags for tables used in a more elaborate cross‑check pipeline
+    # (--supabase-table-matches, --supabase-table-ctgov, --supabase-table-uhealth).
+    # The simplified version of this script only ingests data into a
+    # single trials table, so these options are accepted here for
+    # compatibility but are not otherwise used.  They default to
+    # ``None`` and are intentionally ignored.  Accepting these flags
+    # prevents ``argparse`` from raising ``unrecognized arguments``
+    # errors when they are present in the workflow configuration.
+    parser.add_argument("--supabase-table-matches", default=None, help="(unused) Name of the matches table")
+    parser.add_argument("--supabase-table-ctgov", default=None, help="(unused) Name of the CT.gov table")
+    parser.add_argument("--supabase-table-uhealth", default=None, help="(unused) Name of the UHealth table")
+
+        # Additional table arguments for compatibility with existing workflows
+    # The GitHub A
+    # prevents ``
     # Compose location string
     loc = args.city if not args.state else f"{args.city}, {args.state}"
 

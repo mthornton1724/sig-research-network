@@ -9,7 +9,7 @@ name: Miami Trials uploader
 on:
   # Scheduled run every day at 03:15 UTC (~23:15 EDT) to keep data current
   schedule:
-    - cron: '15 3 * * *'
+    - cron: '15 0 4 * *'
   # Allow manual runs from the GitHub Actions UI
   workflow_dispatch:
   # Allow external POSTs via the repository_dispatch API; the Lovable app will use this to

@@ -1,19 +1,9 @@
 name: Miami Trials uploader
 
-# This GitHub Actions workflow keeps the Sarcoma Investigative Research Group (SIG) research-trials
-# table in Supabase in sync with the latest data from ClinicalTrials.gov and the UHealth website.  It
-# runs nightly via cron, can be triggered manually from the Actions UI (workflow_dispatch), and is
-# also invokable via repository_dispatch (allowing your Lovable app to trigger an on-demand refresh
-# using the GitHub API).
-
 on:
-  # Scheduled run every day at 03:15 UTC (~23:15 EDT) to keep data current
   schedule:
-    - cron: '15 0 4 * *'
-  # Allow manual runs from the GitHub Actions UI
+    - cron: '0 4 * * *'
   workflow_dispatch:
-  # Allow external POSTs via the repository_dispatch API; the Lovable app will use this to
-  # refresh data on demand.  See app/api/trials/refresh/route.ts for the client code.
   repository_dispatch:
     types: [refresh-trials]
 
@@ -21,30 +11,13 @@ jobs:
   run:
     runs-on: ubuntu-latest
     steps:
-      # Check out the repo so the script and workflow files are available
       - uses: actions/checkout@v4
-
-      # Set up Python; this workflow uses Python 3.11 to run the cross-check script
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-
-      # Install dependencies needed by the script.  Requests is used for HTTP calls to
-      # ClinicalTrials.gov and UHealth; supabase is used to upload results to your Supabase project.
-      - name: Install Python dependencies
-        run: |
-          pip install requests supabase
-
-      # Run the cross-check script.  The script should live at the project root and is responsible
-      # for fetching active trials from ClinicalTrials.gov, scraping UHealth trial cards, tagging
-      # trials with disease sites and target cancers, writing CSVs into ./out, and finally uploading
-      # and ingesting the data into your Supabase tables.  Adjust the flags below to match the
-      # facilities, statuses, bucket, and table names you use.
+      - run: pip install requests supabase
       - name: Run cross-check and upload to Supabase
         env:
-          # These secrets must be added in your GitHub repository settings.  SUPABASE_URL points to
-          # your Supabase instance (e.g., https://your-project.supabase.co) and
-          # SUPABASE_SERVICE_ROLE_KEY is the service role key with permission to write to your tables
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: |
@@ -53,7 +26,4 @@ jobs:
             --facility "University of Miami|UHealth|Sylvester|Bascom Palmer" \
             --statuses RECRUITING ENROLLING_BY_INVITATION ACTIVE_NOT_RECRUITING \
             --upload-csv --supabase-bucket research-drops \
-            --ingest --supabase-table-matches trials_crosscheck_matches \
-            --supabase-table-ctgov trials_ctgov \
-            --supabase-table-uhealth trials_uhealth \
-            --supabase-table-trials research_trials
+            --ingest --supabase-table-trials research_trials
